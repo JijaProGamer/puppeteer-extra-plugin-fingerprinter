@@ -28,7 +28,7 @@ class Plugin extends PuppeteerExtraPlugin {
     await withUtils(page).evaluateOnNewDocument(async (utils, opts) => {
       const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
       const blacklistedLetters = ["+", "/"]
-      const whitelistedLetters = ["k", "a", "j", "m", "q"]
+      const whitelistedLetters = ["k", "p", "j"]
 
       const getParameterProxyHandler = {
         apply: function (target, ctx, args) {

@@ -1,103 +1,38 @@
+Please read the puppeteer-extra-plugin-stealth page first (https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth) since my evasions are based on it.
+
 # Constructor
 
 ```js
-import { createMimicInterface } from "./index.js"
-let mimicInterface = createMimicInterface("http://0.0.0.0:59125")
-```
+import { createFingerprinterInterface, commonFingerprint  } from "./index.js"
+import { default as puppeteer } from "puppeteer-extra"
 
-change http://0.0.0.0:59125 if you are not hosting the 
-mimic3 server on your own device
-
-# Functions
-
-## getVoices
-
-```js
-interface voice {
-    key: string,
-    language: string,
-    name: string,
-    speakers: string[],
-    default_properties: {
-        speaking_rate: number,
-        audio_noise: number,
-        phoneme_noise: number,
-    }
-}
-
-let voices = await mimicInterface.getVoices()
-```
-
-returns an object similar to
-
-```js
-[{
-    key: 'de_DE/thorsten-emotion_low',
-    language: 'German',
-    name: 'thorsten-emotion_low',
-    properties: { speaking_rate: 1, audio_noise: 0.333, phoneme_noise: 0.333 },
-    speakers: [
-      'amused',    'angry',
-      'disgusted', 'drunk',
-      'neutral',   'sleepy',
-      'surprised', 'whisper'
-    ]
-  },
-  
-  {
-    key: 'de_DE/thorsten_low',
-    language: 'German',
-    name: 'thorsten_low',
-    properties: { speaking_rate: 1, audio_noise: 0.333, phoneme_noise: 0.333 },
-    speakers: [ 'default' ]
-  },
-
-  ...
-]
-```
-
-## getVoices
-
-The result audio is always pcm_s16le format, perfect for a wav or raw file.
-It always has one channel, 16 bits sample rate, and a sample rate of 22050.
-It always has a bit rate of 352 kb/s
-
-You can compress this further on your own using ffmpeg, or get a better
-audio duration using ffprobe.
-
-```js
-interface voice {
-    key: string,
-    speaker: string,
-    properties: {
-        speaking_rate: number,
-        audio_noise: number,
-        phoneme_noise: number,
-    }
-} // get a voice from getVoices
-
-let speakResult = await mimicInterface.speak("test", "another test", ..., voice) 
-// You can put as many strings, and it will return a array of the same size.
-
-console.log(speakResult)
-```
-
-returns an object similar to
-
-```js
-[
-    {
-        text: "test",
-        audioBuffer: `<Buffer 52 49 46 46 24 e6 14 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 01 00 22 56 00 00 44 ac 00 00 02 00 10 00 64 61 74 61 00 e6 14 00 d0 ff e2 ff e0 ff ... 136959 more bytes>`,
-        duration: 0.2
+let fingerprinter = createFingerprinterInterface({
+    generator_style: "per_browser" || "global" // Optional if staticFingerprint is provided
+    fingerprint_generator: {
+        webgl_vendor: "NVIDIA Corporation", // You can use values instead of functions too
+        webgl_renderer: "NVIDIA GeForce GTX 1650/PCIe/SSE2",
+        userAgent: (e) => {return e.includes("Windows NT 10.0")},
+        language: (e) => {return e.includes("en")},
+        viewport: (e) => {return e.width > 1000 && e.height > 800},
+        language: (e) => true,
+        cpus: (e) => {return e <= 32 && e >= 4},
+        memory: (e) => {return e <= 8},
+        compatibleMediaMimes: (e) => {return e.audio.includes("aac"), e.video["mp4"] && e.video.mp4.length > 0},
+        canvas: {chance: 95, shift: 4}, // set shift to 0 to cancel canvas spoofing
     },
 
-    {
-        text: "another test",
-        audioBuffer: `<Buffer 52 49 46 46 24 da 01 00 57 41 56 45 66 6d 74 20 10 00 00 00 01 00 01 00 22 56 00 00 44 ac 00 00 02 00 10 00 64 61 74 61 00 da 01 00 16 ff 31 ff 38 ff ... 121338 more bytes>`,
-        duration: 0.5
+    staticFingerprint: { // Will only use this fingerprint for all pages and browsers
+        webgl_vendor,
+        webgl_renderer,
+        userAgent,
+        language,
+        viewport,
+        canvas,
+        cpus,
+        memory,
+        compatibleMediaMimes
     },
-
-    ...
-]
+})
 ```
+
+commonFingerprint is the most common fingerprint.
