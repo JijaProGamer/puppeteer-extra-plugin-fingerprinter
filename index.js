@@ -279,7 +279,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
             'navigator.plugins',
             'navigator.webdriver',
             'navigator.vendor',
-            'sourceurl',
+            //'sourceurl',
             'webgl.vendor',
             'window.outerdimensions',
             'window.dimensions',
