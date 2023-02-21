@@ -5,6 +5,7 @@ const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
 const argsToIgnore = [
   '--disable-extensions',
   '--disable-default-apps',
+  '--enable-automation',
   '--disable-component-extensions-with-background-pages'
 ]
 
@@ -31,6 +32,7 @@ class Plugin extends PuppeteerExtraPlugin {
       // that means the user explicitly wants to disable all default arguments
       return
     }
+
     argsToIgnore.forEach(arg => {
       if (options.ignoreDefaultArgs.includes(arg)) {
         return

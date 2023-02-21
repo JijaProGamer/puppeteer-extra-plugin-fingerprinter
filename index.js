@@ -103,7 +103,7 @@ let languages = [
     "ja-JA,ja",
 ]
 let cpus = [4, 8, 12, 16, 24, 32, 64, 96]
-let memories = [4, 8, 16, 24, 32, 48, 64, 96, 128, 192, 256]
+let memories = [0.25, 0.5, 1, 2, 4, 8]
 let canvases = [
     { shift: 1, chance: 50 },
     { shift: 2, chance: 25 },
@@ -183,18 +183,20 @@ function shuffle(arr) {
         .map(({ value }) => value)
 }
 
-function generateFingerprint(generator_options = {
-    webgl_vendor: (e) => e.includes("NVIDIA"),
-    webgl_renderer: (e) => e.includes("1650"),
-    language: (e) => e.includes("en"),
-    userAgent: (e) => e.includes("Windows"),
-    language: (e) => e.includes("en"),
-    viewport: (e) => e.width > 1000 && e.height > 800,
-    cpus: (e) => e <= 16 && e >= 4,
-    memory: (e) => e <= 32 && e >= 4,
-    compatibleMediaMimes: (e) => e.audio.includes("aac") && e.video["mp4"] && e.video.mp4.length > 0,
-    canvas: (e) => e.chance < 75 && e.chance > 20
-}) {
+function generateFingerprint(generator_options = {}) {
+    generator_options = {
+        webgl_vendor: (e) => true,
+        webgl_renderer: (e) => true,
+        language: (e) => e.includes("en"),
+        userAgent: (e) => e.includes("Windows"),
+        viewport: (e) => e.width > 1000 && e.height > 800 && e.width < 2000 && e.height < 2000,
+        cpus: (e) => e <= 16 && e >= 4,
+        memory: (e) => true,
+        compatibleMediaMimes: (e) => e.audio.includes("aac") && e.video["mp4"] && e.video.mp4.length > 0,
+        canvas: (e) => e.chance < 75 && e.chance > 20,
+        ...generator_options,
+    }
+
     let webgl_vendor = generator_options.webgl_vendor
     let webgl_renderer = generator_options.webgl_renderer
     let viewport = generator_options.viewport
@@ -218,7 +220,7 @@ function generateFingerprint(generator_options = {
         webgl_vendor = shuffled_webgl_vendors.find(generator_options.webgl_vendor) || commonFingerprint.webgl_vendor
 
     if (typeof generator_options.webgl_renderer == "function")
-        webgl_renderer = shuffle(webgl_renderers[webgl_vendors] || []).find(generator_options.webgl_renderer) || commonFingerprint.webgl_renderer
+        webgl_renderer = shuffle(webgl_renderers[webgl_vendor] || []).find(generator_options.webgl_renderer) || commonFingerprint.webgl_renderer
 
     if (typeof generator_options.viewport == "function")
         viewport = shuffled_viewports.find(generator_options.viewport) || commonFingerprint.viewport
@@ -241,6 +243,17 @@ function generateFingerprint(generator_options = {
     if (typeof generator_options.language == "function")
         language = shuffled_languages.find(generator_options.language) || commonFingerprint.language
 
+    console.log({
+        compatibleMediaMimes,
+        language,
+        webgl_vendor,
+        webgl_renderer,
+        viewport,
+        userAgent,
+        memory,
+        canvas,
+        cpus: cpu,
+    })
     return {
         compatibleMediaMimes,
         language,
@@ -279,6 +292,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
             'navigator.plugins',
             'navigator.webdriver',
             'navigator.vendor',
+            'document.focus',
             //'sourceurl',
             'webgl.vendor',
             'window.outerdimensions',
@@ -293,8 +307,8 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
 
     get dependencies() {
         return new Set(
-            [...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
-            //[...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`)
+            //[...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
+            [...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`)
         )
     }
 
