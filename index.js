@@ -1,11 +1,6 @@
 //import axios from 'axios';
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin';
 
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 let commonFingerprint = {
     webgl_vendor: "NVIDIA Corporation",
     webgl_renderer: "NVIDIA GeForce GTX 1650/PCIe/SSE2",
@@ -190,10 +185,10 @@ function generateFingerprint(generator_options = {}) {
         language: (e) => e.includes("en"),
         userAgent: (e) => e.includes("Windows"),
         viewport: (e) => e.width > 1000 && e.height > 800 && e.width < 2000 && e.height < 2000,
-        cpus: (e) => e <= 16 && e >= 4,
+        cpus: (e) => e <= 24 && e >= 4,
         memory: (e) => true,
         compatibleMediaMimes: (e) => e.audio.includes("aac") && e.video["mp4"] && e.video.mp4.length > 0,
-        canvas: (e) => e.chance < 75 && e.chance > 20,
+        canvas: (e) => true,
         ...generator_options,
     }
 
