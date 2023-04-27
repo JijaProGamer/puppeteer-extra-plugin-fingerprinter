@@ -30,16 +30,16 @@ class Plugin extends PuppeteerExtraPlugin {
       )
     }, OS)
 
-    let ver = this.opts.userAgent.split("/")
-    ver.shift()
+    let parts = this.opts.userAgent.split(" ")
+    let version = parts.pop().split("/")[1]
 
     await withUtils(page).evaluateOnNewDocument(async (utils, ver) => {
       utils.replaceGetterWithProxy(
         Object.getPrototypeOf(navigator),
         'appVersion',
-        utils.makeHandler().getterValue(ver.join())
+        utils.makeHandler().getterValue(ver)
       )
-    }, ver)
+    }, version + parts.join(" "))
   }
 
   async beforeLaunch(options) {

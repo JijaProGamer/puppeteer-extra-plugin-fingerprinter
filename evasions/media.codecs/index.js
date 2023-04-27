@@ -10,7 +10,7 @@ const withUtils = require('../_utils/withUtils')
  */
 class Plugin extends PuppeteerExtraPlugin {
   opts = {}
-  
+
   constructor(opts = {}) {
     super(opts)
   }
@@ -53,16 +53,16 @@ class Plugin extends PuppeteerExtraPlugin {
 
           switch (type) {
             case "audio":
-              if(opts.compatibleMediaMimes.audio.includes(container)){
+              if (opts.compatibleMediaMimes.audio.includes(container)) {
                 return "probably"
               }
 
               return ""
             case "video":
               let videoContainer = opts.compatibleMediaMimes.video[container]
-              if(videoContainer){
-                let codecFound = codecs.some(codec => videoContainer.includes(codec)) 
-                if(codecFound || codecs.length == 0){
+              if (videoContainer) {
+                let codecFound = codecs.some(codec => videoContainer.includes(codec))
+                if (codecFound || codecs.length == 0) {
                   return "probably"
                 }
               }
@@ -74,10 +74,55 @@ class Plugin extends PuppeteerExtraPlugin {
         }
       }
 
+      const isTypeSupported = {
+        apply: function (target, ctx, args) {
+          if (!args || !args.length) {
+            return target.apply(ctx, args)
+          }
+
+          const { mime, codecs } = parseInput(args[0])
+
+          let [type, container] = mime.split("/")
+
+          switch (type) {
+            case "audio":
+              if (opts.compatibleMediaMimes.audio.includes(container)) {
+                return true
+              }
+
+              return ""
+            case "video":
+              let videoContainer = opts.compatibleMediaMimes.video[container]
+              if (videoContainer) {
+                let codecFound = codecs.some(codec => videoContainer.includes(codec))
+                if (codecFound || codecs.length == 0) {
+                  return true
+                }
+              }
+
+              return false
+          }
+
+          return target.apply(ctx, args)
+        }
+      }
+
       utils.replaceWithProxy(
         HTMLMediaElement.prototype,
         'canPlayType',
         canPlayType
+      )
+
+      utils.replaceWithProxy(
+        MediaRecorder.prototype,
+        'isTypeSupported',
+        isTypeSupported
+      )
+
+      utils.replaceWithProxy(
+        MediaSource.prototype,
+        'isTypeSupported',
+        isTypeSupported
       )
     }, this.opts)
   }

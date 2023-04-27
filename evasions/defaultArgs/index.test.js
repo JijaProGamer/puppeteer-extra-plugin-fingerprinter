@@ -1,8 +1,8 @@
 const test = require('ava')
 
 const { vanillaPuppeteer, addExtra } = require('../../test/util')
-const Plugin = require('.')
-const { argsToIgnore } = require('.')
+const Plugin = require('evasions/defaultArgs')
+const { argsToIgnore } = require('evasions/defaultArgs')
 
 test('vanilla: uses args to ignore', async t => {
   const browser = await vanillaPuppeteer.launch({ headless: true })

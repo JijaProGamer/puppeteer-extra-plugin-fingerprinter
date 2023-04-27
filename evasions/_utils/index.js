@@ -322,7 +322,7 @@ utils.replaceWithProxy = (obj, propName, handler) => {
   utils.replaceProperty(obj, propName, { value: proxyObj })
   utils.redirectToString(proxyObj, originalObj)
 
-  return true
+  return originalObj
 }
 /**
  * All-in-one method to replace a getter with a JS Proxy using the provided Proxy handler with traps.

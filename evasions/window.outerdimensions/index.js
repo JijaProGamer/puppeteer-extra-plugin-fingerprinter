@@ -20,10 +20,6 @@ class Plugin extends PuppeteerExtraPlugin {
   async onPageCreated(page) {
     await page.evaluateOnNewDocument((opts) => {
       try {
-        if (window.outerWidth && window.outerHeight) {
-          return
-        }
-
         const windowFrame = 80
 
         window.outerWidth = window.innerWidth = opts.viewport.width

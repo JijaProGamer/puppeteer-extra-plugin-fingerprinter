@@ -36,7 +36,14 @@ class Plugin extends PuppeteerExtraPlugin {
           'deviceMemory',
           utils.makeHandler().getterValue(opts.memory)
         )
+
+        utils.replaceGetterWithProxy(Object.getPrototypeOf(performance.memory),
+          'jsHeapSizeLimit',
+          utils.makeHandler().getterValue(opts.memory * 1000000000)
+        )
       }, this.opts
+
+      // performance.memory.jsHeapSizeLimit;
     )
   }
 

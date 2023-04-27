@@ -26,9 +26,7 @@ class Plugin extends PuppeteerExtraPlugin {
   /* global WebGLRenderingContext WebGL2RenderingContext */
   async onPageCreated(page) {
     await withUtils(page).evaluateOnNewDocument(async (utils, opts) => {
-      const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-      const blacklistedLetters = ["+", "/"]
-      const whitelistedLetters = ["k", "p", "j"]
+      let id = Math.random(Math.random() * 10000);
 
       const getParameterProxyHandler = {
         apply: function (target, ctx, args) {
@@ -46,26 +44,31 @@ class Plugin extends PuppeteerExtraPlugin {
         }
       }
 
-      const getCanvasProxyHandler = {
+      const originalFunction = HTMLCanvasElement.prototype.toDataURL;
+
+      /*const getCanvasProxyHandler = {
         apply: function (target, ctx, args) {
           const result = utils.cache.Reflect.apply(target, ctx, args)
-          let image = result.split(",")[1]//.slice(0,-2)
-          let newString = ""
-          for (let [index, letter] of [...image].entries()) {
-            let alphabetLetter = alphabet.indexOf(letter)
+          let canvas_element = ctx.cloneNode()
+          let canvas_context = canvas_element.getContext("2d")
 
-            if (index % opts.canvas.chance == 0 && alphabetLetter && alphabetLetter > opts.canvas.shift && !blacklistedLetters.includes(letter) && whitelistedLetters.includes(letter)) {
-              newString += alphabet[alphabetLetter - opts.canvas.shift]
-            } else {
-              newString += letter
-            }
+          let image = new Image()
+          image.src = result;
+          canvas_context.drawImage(image, 0, 0)
+
+          /*const imageData = canvas_context.getImageData(0, 0, 100, 199);
+          
+          for(let i = 0; x < imageData.data.length ; i++){
+            imageData.data[i] = 0
           }
 
-          return `${result.split(",")[0]},${newString}`
+          let new_result = originalFunction.apply(canvas_element, args)
+
+          return new_result
         }
       }
 
-      utils.replaceWithProxy(HTMLCanvasElement.prototype, 'toDataURL', getCanvasProxyHandler)
+      utils.replaceWithProxy(HTMLCanvasElement.prototype, 'toDataURL', getCanvasProxyHandler)*/
 
       utils.replaceWithProxy(WebGLRenderingContext.prototype, 'getParameter', getParameterProxyHandler)
       utils.replaceWithProxy(WebGL2RenderingContext.prototype, 'getParameter', getParameterProxyHandler)

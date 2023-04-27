@@ -111,7 +111,6 @@ let canvases = [
 let userAgents = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.61",
@@ -265,6 +264,12 @@ function generateFingerprint(generator_options = {}) {
 
 let globalFingerprint
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 class FingerprinterPlugin extends PuppeteerExtraPlugin {
     constructor(opts = {}) {
         super(opts)
@@ -289,6 +294,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
             'navigator.webdriver',
             'navigator.vendor',
             'document.focus',
+            //'disable.webrtc',
             //'sourceurl',
             'webgl.vendor',
             'window.outerdimensions',
@@ -303,8 +309,8 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
 
     get dependencies() {
         return new Set(
-            [...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
-            //[...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`)
+            //[...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
+            [...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`)
         )
     }
 
