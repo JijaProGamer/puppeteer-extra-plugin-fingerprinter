@@ -16,13 +16,13 @@ class Plugin extends PuppeteerExtraPlugin {
   }
 
   async onPageCreated(page) {
-    await page.setUserAgent(this.opts.userAgent)
+    page.setUserAgent(this.opts.userAgent)
     let parser = new UAParser(this.opts.userAgent);
     let OS = parser.getOS().name == "Windows"
             ? "Win32"
             : "Linux x86_64"
 
-    await withUtils(page).evaluateOnNewDocument(async (utils, OS) => {
+    withUtils(page).evaluateOnNewDocument(async (utils, OS) => {
       utils.replaceGetterWithProxy(
         Object.getPrototypeOf(navigator),
         'platform',
@@ -30,16 +30,24 @@ class Plugin extends PuppeteerExtraPlugin {
       )
     }, OS)
 
-    let parts = this.opts.userAgent.split(" ")
-    let version = parts.pop().split("/")[1]
-
-    await withUtils(page).evaluateOnNewDocument(async (utils, ver) => {
+    withUtils(page).evaluateOnNewDocument(async (utils, ver) => {
       utils.replaceGetterWithProxy(
         Object.getPrototypeOf(navigator),
         'appVersion',
         utils.makeHandler().getterValue(ver)
       )
-    }, version + parts.join(" "))
+    }, this.opts.userAgent)
+
+    /*let parts = this.opts.userAgent.split(" ")
+    let version = parts.shift().split("/")[1]
+
+    withUtils(page).evaluateOnNewDocument(async (utils, ver) => {
+      utils.replaceGetterWithProxy(
+        Object.getPrototypeOf(navigator),
+        'appVersion',
+        utils.makeHandler().getterValue(ver)
+      )
+    }, version + parts.join(" "))*/
   }
 
   async beforeLaunch(options) {

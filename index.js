@@ -237,18 +237,6 @@ function generateFingerprint(generator_options = {}) {
     if (typeof generator_options.language == "function")
         language = shuffled_languages.find(generator_options.language) || commonFingerprint.language
 
-    /*console.log({
-        compatibleMediaMimes,
-        language,
-        webgl_vendor,
-        webgl_renderer,
-        viewport,
-        userAgent,
-        memory,
-        canvas,
-        cpus: cpu,
-    })*/
-
     return {
         compatibleMediaMimes,
         language,
@@ -309,8 +297,8 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
 
     get dependencies() {
         return new Set(
-            //[...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
-            [...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`)
+            [...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
+            //[...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`)
         )
     }
 

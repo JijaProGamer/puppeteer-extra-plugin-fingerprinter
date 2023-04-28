@@ -1,30 +1,41 @@
-interface voice {
-    key: string,
+interface anyString {
+    [key: string]: string
+}
+
+interface Fingerprint {
+    webgl_vendor: string,
+    webgl_renderer: string,
+    userAgent: string,
     language: string,
-    name: string,
-    speakers: string[],
-    default_properties: {
-        speaking_rate: number,
-        audio_noise: number,
-        phoneme_noise: number,
-    }
+    cpus: number,
+    memory: number,
+
+    viewport: {
+        width: number,
+        height: number
+    },
+    canvas: {
+        shift: number,
+        chance: number,
+    },
+    compatibleMediaMimes: {
+        audio: string[],
+        video: anyString,
+    },
 }
 
+function boolReturn(choser: any): bool 
 
-interface singleVoice {
-    key: string,
-    speaker: string,
-    properties: {
-        speaking_rate: number,
-        audio_noise: number,
-        phoneme_noise: number,
-    }
-}
-
-interface speakResult {
-    text: string,
-    audioBuffer: Buffer,
-    duration: number,
+interface fingerprintGeneratorOptions {
+    webgl_vendor: string | boolReturn | null,
+    webgl_renderer: string | boolReturn | null,
+    language: string | boolReturn | null,
+    userAgent: string | boolReturn | null,
+    viewport: {width: number, height: number} | boolReturn | null,
+    cpus: number | boolReturn | null,
+    memory: number | boolReturn | null,
+    compatibleMediaMimes: {audio: string[], video: anyString,} | boolReturn | null,
+    canvas: {chance: number, shift: number} | boolReturn | null,
 }
 
 export class FingerprinterPlugin {
@@ -33,8 +44,8 @@ export class FingerprinterPlugin {
     get dependencies(): string[];
     get name(): string;
     set enabledEvasions(evasions: Set<string>): undefined;
-
-    speak(text: string | string[], voice: singleVoice): Promise<speakResult[]>;
 }
 
-export function createFingerprinterInterface(server_url: string): FingerprinterPlugin
+export function generateFingerprint(options: fingerprintGeneratorOptions | null): FingerprinterPlugin
+export function createFingerprinterInterface(): FingerprinterPlugin
+export declare const commonFingerprint: Fingerprint
