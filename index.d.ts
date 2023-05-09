@@ -38,6 +38,12 @@ interface fingerprintGeneratorOptions {
     canvas: {chance: number, shift: number} | boolReturn | null,
 }
 
+interface FingerprintInterface {
+    generator_style: string,
+    staticFingerprint: Fingerprint,
+    fingerprint_generator: fingerprintGeneratorOptions,
+}
+
 export class FingerprinterPlugin {
     get availableEvasions(): string[];
     get enabledEvasions(): Set<string>;
@@ -47,5 +53,5 @@ export class FingerprinterPlugin {
 }
 
 export function generateFingerprint(options: fingerprintGeneratorOptions | null): FingerprinterPlugin
-export function createFingerprinterInterface(): FingerprinterPlugin
+export function createFingerprinterInterface(options: fingerprintGeneratorOptions): FingerprinterPlugin
 export declare const commonFingerprint: Fingerprint

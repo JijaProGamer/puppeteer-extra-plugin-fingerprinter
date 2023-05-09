@@ -296,10 +296,11 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
     }
 
     get dependencies() {
-        return new Set(
-            [...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
-            //[...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`)
-        )
+        if(!global.dev){
+            return new Set([...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`))
+        }
+
+        return new Set([...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`))
     }
 
     get availableEvasions() {
@@ -315,6 +316,41 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
     }
 
     async onPageCreated(page) {
+        await page.setRequestInterception(true);
+
+        page.on('request', (request) => {
+            if (request.isInterceptResolutionHandled()) return;
+            let url = new URL(request.url())
+
+            /*headers: {
+                ':authority': 'www.whatismybrowser.com',
+                ':method': 'GET',
+                ':path': '/detect/what-http-headers-is-my-browser-sending',
+                ':scheme': 'https',
+                accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'en-US,en;q=0.5',
+                'sec-fetch-dest': 'document',
+                'sec-fetch-mode': 'navigate',
+                'sec-fetch-site': 'none',
+                'sec-fetch-user': '?1',
+                'upgrade-insecure-requests': '1',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.55'*/
+
+            let headers = {...{
+                "accept": 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'en-US,en;q=0.5',
+                'sec-fetch-dest': 'document',
+                'sec-fetch-mode': 'navigate',
+                'sec-fetch-site': 'none',
+                'sec-fetch-user': '?1',
+                'upgrade-insecure-requests': '1',
+            },...request.headers()}
+
+            request.continue({headers}, 5) 
+        });
+
         if (this.opts.generator_style == "per_page" && !this.opts.staticFingerprint) {
 
         }
