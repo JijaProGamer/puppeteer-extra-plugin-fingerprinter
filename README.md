@@ -1,4 +1,4 @@
-Please read the puppeteer-extra-plugin-stealth page first (https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth) since my evasions are based on it.
+NOTE: This does not fix the issues with headless: true!!! If you want to use a headless mode use headless: "new" or other ways
 
 # Constructor
 
@@ -17,12 +17,15 @@ let staticFingerprint = generateFingerprint({
     memory: (e) => {return e <= 8},
     compatibleMediaMimes: (e) => {return e.audio.includes("aac"), e.video["mp4"] && e.video.mp4.length > 0},
     canvas: {chance: 95, shift: 4}, // set shift to 0 to cancel canvas spoofing
+    proxy: "direct", // Support for string only
+    proxy: () => "direct", // Defaults to this, meaning no proxy
+    proxy: () =>  ["direct", "socks5://127.0.0.1"] // Support for array and get a random object
 })
 
 // You can save staticFingerprint for later use if you want
 
 let fingerprinter = createFingerprinterInterface({
-    generator_style: "per_browser" || "global", // Optional if staticFingerprint is provided
+    generator_style: "per_browser" || "global" || "per_page", // Optional if staticFingerprint is provided
     fingerprint_generator: {
         webgl_vendor: "NVIDIA Corporation", // You can use values instead of functions too
         webgl_renderer: "NVIDIA GeForce GTX 1650/PCIe/SSE2",
@@ -34,6 +37,9 @@ let fingerprinter = createFingerprinterInterface({
         memory: (e) => {return e <= 8},
         compatibleMediaMimes: (e) => {return e.audio.includes("aac"), e.video["mp4"] && e.video.mp4.length > 0},
         canvas: {chance: 95, shift: 4}, // set shift to 0 to cancel canvas spoofing
+        proxy: "direct", // Support for string only
+        proxy: () => "direct", // Defaults to this, meaning no proxy
+        proxy: () =>  ["direct", "socks5://127.0.0.1"] // Support for array and get a random object
     },
 
     staticFingerprint: staticFingerprint// Will only use this fingerprint for all pages and browsers if provided,

@@ -9,6 +9,7 @@ interface Fingerprint {
     language: string,
     cpus: number,
     memory: number,
+    proxy: string,
 
     viewport: {
         width: number,
@@ -25,6 +26,8 @@ interface Fingerprint {
 }
 
 function boolReturn(choser: any): bool 
+function stringReturn(choser: any): string
+function stringArrayReturn(choser: any): string[]
 
 interface fingerprintGeneratorOptions {
     webgl_vendor: string | boolReturn | null,
@@ -36,6 +39,7 @@ interface fingerprintGeneratorOptions {
     memory: number | boolReturn | null,
     compatibleMediaMimes: {audio: string[], video: anyString,} | boolReturn | null,
     canvas: {chance: number, shift: number} | boolReturn | null,
+    proxy: string | stringReturn | stringArrayReturn | null
 }
 
 interface FingerprintInterface {

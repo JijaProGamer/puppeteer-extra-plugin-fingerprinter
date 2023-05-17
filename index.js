@@ -1,5 +1,17 @@
 //import axios from 'axios';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin';
+import useProxy from 'puppeteer-page-proxy'
+
+import { dirname } from 'path'
+import { createRequire } from 'module';
+import { fileURLToPath } from 'url'
+
+const require = createRequire(fileURLToPath(import.meta.url)); 
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+global.__dirname = __dirname
 
 let commonFingerprint = {
     webgl_vendor: "NVIDIA Corporation",
@@ -30,145 +42,15 @@ let commonFingerprint = {
     }
 }
 
-let webgl_vendors = ["Google Inc.", "NVIDIA Corporation"]
-let webgl_renderers = {
-    "Google Inc.": [
-        "ANGLE (Intel(R) HD Graphics 520 Direct3D11 vs_5_0 ps_5_0)",
-        "ANGLE (Intel(R) HD Graphics 530 Direct3D11 vs_5_0 ps_5_0)",
-        "ANGLE (Intel(R) HD Graphics 510 Direct3D11 vs_5_0 ps_5_0)",
-
-        "ANGLE (Intel(R) UHD Graphics 630 Direct3D11 vs_5_0 ps_5_0)",
-        "ANGLE (Intel(R) UHD Graphics 640 Direct3D11 vs_5_0 ps_5_0)",
-
-        "ANGLE (Intel(R) UHD Graphics 740 Direct3D11 vs_5_0 ps_5_0)",
-        "ANGLE (Intel(R) UHD Graphics 750 Direct3D11 vs_5_0 ps_5_0)",
-    ],
-    "NVIDIA Corporation": [
-        "NVIDIA GeForce RTX 3080/PCIe/SSE2",
-        "NVIDIA GeForce RTX 3070/PCIe/SSE2",
-        "NVIDIA GeForce RTX 3060/PCIe/SSE2",
-
-        "NVIDIA GeForce RTX 4090/PCIe/SSE2",
-        "NVIDIA GeForce RTX 3080/PCIe/SSE2",
-        "NVIDIA GeForce RTX 3070/PCIe/SSE2",
-        "NVIDIA GeForce RTX 3060/PCIe/SSE2",
-
-        "NVIDIA GeForce RTX 2080/PCIe/SSE2",
-        "NVIDIA GeForce RTX 2070/PCIe/SSE2",
-        "NVIDIA GeForce RTX 2060/PCIe/SSE2",
-        "NVIDIA GeForce RTX 2050/PCIe/SSE2",
-
-        "NVIDIA GeForce GTX 1660/PCIe/SSE2",
-        "NVIDIA GeForce GTX 1650/PCIe/SSE2",
-
-        "NVIDIA GeForce GTX 1080/PCIe/SSE2",
-        "NVIDIA GeForce GTX 1070/PCIe/SSE2",
-        "NVIDIA GeForce GTX 1060/PCIe/SSE2",
-        "NVIDIA GeForce GTX 1050/PCIe/SSE2",
-
-        "NVIDIA GeForce GTX 950/PCIe/SSE2",
-        "NVIDIA GeForce GTX 960/PCIe/SSE2",
-        "NVIDIA GeForce GTX 970/PCIe/SSE2",
-        "NVIDIA GeForce GTX 980/PCIe/SSE2",
-
-        "NVIDIA GeForce GTX 750/PCIe/SSE2",
-        "NVIDIA GeForce GTX 760/PCIe/SSE2",
-        "NVIDIA GeForce GTX 770/PCIe/SSE2",
-        "NVIDIA GeForce GTX 780/PCIe/SSE2",
-
-        "NVIDIA GeForce GTX 680/PCIe/SSE2",
-        "NVIDIA GeForce GTX 670/PCIe/SSE2",
-        "NVIDIA GeForce GTX 660/PCIe/SSE2",
-        "NVIDIA GeForce GTX 650/PCIe/SSE2",
-
-        "NVIDIA GeForce GTX 580/PCIe/SSE2",
-        "NVIDIA GeForce GTX 570/PCIe/SSE2",
-        "NVIDIA GeForce GTX 560/PCIe/SSE2",
-        "NVIDIA GeForce GTX 550/PCIe/SSE2",
-    ]
-}
-let languages = [
-    "en-US,en",
-    "ab-AB,ab",
-    "af-AF,af",
-    "ro-RO,ro",
-    "br-BR,br",
-    "nl-NL,nl",
-    "he-HE,he",
-    "ja-JA,ja",
-]
 let cpus = [4, 8, 12, 16, 24, 32, 64, 96]
 let memories = [0.25, 0.5, 1, 2, 4, 8]
-let canvases = [
-    { shift: 1, chance: 50 },
-    { shift: 2, chance: 25 },
-    { shift: 4, chance: 75 },
-    { shift: 2, chance: 100 },
-    { shift: 3, chance: 35 },
-    { shift: 4, chance: 45 },
-    { shift: 5, chance: 95 },
-]
-let userAgents = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.61",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 OPR/94.0.0.0",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.78",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.70",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.41",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.55",
-    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-]
-let viewports = [
-    { width: 1920, height: 1080 },
-    { width: 1366, height: 768 },
-    { width: 1536, height: 864 },
-    { width: 2160, height: 1440 },
-    { width: 4096, height: 2160 },
-    { width: 2560, height: 1080 },
-    { width: 5120, height: 2160 },
-    { width: 1920, height: 800 },
-]
-
-let mediaTypes = [
-    {
-        audio: [`flac`, `vorbis`, `opus`, 'aac'],
-        video: {
-            mp4: [`avc1.42E01E`, `H264`, `flac`],
-            mpeg: [],
-            ogg: ["opus", "theora"],
-            webm: ["vp9", "vp8"]
-        }
-    },
-    {
-        audio: [`flac`, `opus`],
-        video: {
-            mp4: [`avc1.42E01E`, `H264`, `flac`],
-            webm: ["vp8"]
-        }
-    },
-    {
-        audio: [`vorbis`, `opus`, 'aac'],
-        video: {
-            mp4: [`avc1.42E01E`, `H264`, `flac`],
-            mpeg: [],
-            ogg: ["opus"],
-        }
-    },
-    {
-        audio: [`flac`, `vorbis`, 'aac'],
-        video: {
-            mp4: [`avc1.42E01E`, `H264`, `flac`],
-            ogg: ["opus", "theora"],
-            webm: ["vp8"]
-        }
-    },
-]
+let webgl_vendors = ["Google Inc.", "NVIDIA Corporation"]
+let webgl_renderers = JSON.parse(readFileSync("./databases/webgl_renderers.json"))
+let mediaTypes = JSON.parse(readFileSync("./databases/media_types.json"))
+let languages = JSON.parse(readFileSync("./databases/languages.json"))
+let canvases = JSON.parse(readFileSync("./databases/canvases.json"))
+let userAgents = JSON.parse(readFileSync("./databases/userAgents.json"))
+let viewports = JSON.parse(readFileSync("./databases/viewports.json"))
 
 function shuffle(arr) {
     return [...arr]
@@ -188,6 +70,7 @@ function generateFingerprint(generator_options = {}) {
         memory: (e) => true,
         compatibleMediaMimes: (e) => e.audio.includes("aac") && e.video["mp4"] && e.video.mp4.length > 0,
         canvas: (e) => true,
+        proxy: (e) => ["direct://"],
         ...generator_options,
     }
 
@@ -200,6 +83,7 @@ function generateFingerprint(generator_options = {}) {
     let canvas = generator_options.canvas
     let language = generator_options.language
     let userAgent = generator_options.userAgent
+    let proxy = generator_options.proxy
 
     let shuffled_webgl_vendors = shuffle(webgl_vendors)
     let shuffled_viewports = shuffle(viewports)
@@ -237,6 +121,16 @@ function generateFingerprint(generator_options = {}) {
     if (typeof generator_options.language == "function")
         language = shuffled_languages.find(generator_options.language) || commonFingerprint.language
 
+    if (typeof generator_options.proxy == "function"){
+        let proxies = generator_options.proxy()
+
+        if(typeof proxies == "string") {
+            proxy = proxies
+        } else {
+            proxy = shuffle(proxies)[Math.floor(Math.random() * proxies.length)]
+        }
+    }
+
     return {
         compatibleMediaMimes,
         language,
@@ -247,16 +141,43 @@ function generateFingerprint(generator_options = {}) {
         memory,
         canvas,
         cpus: cpu,
+        proxy,
     }
 }
 
 let globalFingerprint
 
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+let evasions = [
+    "useragent",
+    "webdriver",
+    "chrome.runtime",
+    "document.focus",
+    "media.codecs",
+    "navigator.hardware",
+    "navigator.language",
+    "navigator.permissions",
+    "webgl", // Add pixel switching after fixing canvas
+    "canvas", // Fix canvas -___- I have canvas
+    "window.dimensions"
+]
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// To see later:
+// Date.toString() on normal chrome: 'function Date() { [native code] }'
+// Date.toString on normal chrome: ƒ toString() { [native code] }
+// Date.toString() on puppeteer: 'function Date() { [native code] }'
+// Date.toString on puppeteer: Proxy(Function) {length: 0, name: 'toString'}
+
+let evasionPlugins = {}
+let badDefaultArgs = [
+    '--disable-extensions',
+    '--disable-default-apps',
+    '--enable-automation',
+    '--disable-component-extensions-with-background-pages'
+]
+
+for(let evasion of evasions){
+    evasionPlugins[evasion] = require(path.join(__dirname, "evasions", `${evasion}.cjs`))
+}
 
 class FingerprinterPlugin extends PuppeteerExtraPlugin {
     constructor(opts = {}) {
@@ -268,40 +189,13 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
     }
 
     get defaults() {
-        const availableEvasions = new Set([
-            'chrome.app',
-            'chrome.csi',
-            'chrome.loadTimes',
-            'chrome.runtime',
-            'defaultArgs',
-            'media.codecs',
-            'navigator.hardware',
-            'navigator.languages',
-            'navigator.permissions',
-            'navigator.plugins',
-            'navigator.webdriver',
-            'navigator.vendor',
-            'document.focus',
-            //'disable.webrtc',
-            //'sourceurl',
-            'webgl.vendor',
-            'window.outerdimensions',
-            'window.dimensions',
-            'user-agent',
-        ])
         return {
-            availableEvasions,
-            enabledEvasions: new Set([...availableEvasions])
+            availableEvasions: new Set(evasions),
+            enabledEvasions: new Set([...evasions])
         }
     }
 
-    get dependencies() {
-        if(!global.dev){
-            return new Set([...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`))
-        }
-
-        return new Set([...this.opts.enabledEvasions].map(e => __dirname + `/evasions/${e}`))
-    }
+    get dependencies() {return []}
 
     get availableEvasions() {
         return this.defaults.availableEvasions
@@ -315,61 +209,100 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
         this.opts.enabledEvasions = evasions
     }
 
-    async onPageCreated(page) {
-        await page.setRequestInterception(true);
+    async onBrowser(browser, opts){
+        let options = opts.fingerprint_opts
+        let evasions = this.availableEvasions
+        let fingerprint_generator = this.opts.fingerprint_generator
 
-        page.on('request', (request) => {
-            if (request.isInterceptResolutionHandled()) return;
-            let url = new URL(request.url())
+        browser.on('targetcreated',async (target) => {
+            if(target.type() !== "page")
+                return
+            
+            const pageList = await browser.pages()
+            const page = pageList[pageList.length - 1]
 
-            /*headers: {
-                ':authority': 'www.whatismybrowser.com',
-                ':method': 'GET',
-                ':path': '/detect/what-http-headers-is-my-browser-sending',
-                ':scheme': 'https',
-                accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-                'accept-encoding': 'gzip, deflate, br',
-                'accept-language': 'en-US,en;q=0.5',
-                'sec-fetch-dest': 'document',
-                'sec-fetch-mode': 'navigate',
-                'sec-fetch-site': 'none',
-                'sec-fetch-user': '?1',
-                'upgrade-insecure-requests': '1',
-                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.55'*/
+            page.options = options || generateFingerprint(fingerprint_generator)
 
-            let headers = {...{
-                "accept": 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-                'accept-encoding': 'gzip, deflate, br',
-                'accept-language': 'en-US,en;q=0.5',
-                'sec-fetch-dest': 'document',
-                'sec-fetch-mode': 'navigate',
-                'sec-fetch-site': 'none',
-                'sec-fetch-user': '?1',
-                'upgrade-insecure-requests': '1',
-            },...request.headers()}
+            for(let evasion of evasions){
+                evasionPlugins[evasion](page, page.options)
+            }
 
-            request.continue({headers}, 5) 
+            await page.setRequestInterception(true);
+
+            page.on('request', (request) => {
+                if (request.isInterceptResolutionHandled()) return;
+    
+                let headers = {...{
+                    //"accept": 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                    'accept-encoding': 'gzip, deflate, br',
+                    'accept-language': 'en-US,en;q=0.5',
+                    //'upgrade-insecure-requests': '1',
+                },...request.headers()}
+    
+                if (request.isNavigationRequest()) {
+                    headers["sec-fetch-mode"] = "navigate";
+                    headers["sec-fetch-site"] = "none";
+                    headers["sec-fetch-user"] = "?1";
+                } else {
+                    headers["sec-fetch-mode"] = "no-cors";
+                    headers["sec-fetch-site"] = "same-origin";
+                }
+    
+                let resourceType = request.resourceType()
+    
+                if(!resourceType == "ping"){
+                    if(resourceType == "fetch"){
+                        headers["sec-fetch-dest"] = "empty"
+                    } else {
+                        headers["sec-fetch-dest"] = resourceType
+                    }
+                }
+    
+                // Wait for other request handlers to do their jobs, usefull for not wasting bandwidth on rejections and such
+    
+                setTimeout(() => {
+                    if (request.isInterceptResolutionHandled()) return;
+                    let proxy = page.options.proxy.trim()
+    
+                    if(!proxy || proxy == "direct" || proxy == "direct://"){
+                        request.continue({headers})
+                    } else {
+                        useProxy(request, {proxy, headers})
+                    }
+    
+                }, 250)
+            });
         });
-
-        if (this.opts.generator_style == "per_page" && !this.opts.staticFingerprint) {
-
-        }
     }
 
-    async beforeLaunch(options) {
+    async beforeLaunch(options) {    
+        options.ignoreDefaultArgs = options.ignoreDefaultArgs || []
+        if (options.ignoreDefaultArgs !== true) {
+            for(let arg of badDefaultArgs){
+                if(!options.ignoreDefaultArgs.includes(arg)){
+                    options.ignoreDefaultArgs.push(arg)
+                }
+            }
+        }
+
         if (this.opts.staticFingerprint) {
-            options.opts = this.opts.staticFingerprint
+            options.fingerprint_opts = this.opts.staticFingerprint
         } else {
+            if(!this.opts.generator_style){
+                options.fingerprint_opts = generateFingerprint(this.opts.fingerprint_generator)
+                return
+            }
+
             switch (this.opts.generator_style) {
                 case "global":
                     if (!globalFingerprint) {
                         globalFingerprint = generateFingerprint(this.opts.fingerprint_generator)
                     }
 
-                    options.opts = globalFingerprint
+                    options.fingerprint_opts = globalFingerprint
                     break;
                 case "per_browser":
-                    options.opts = generateFingerprint(this.opts.fingerprint_generator)
+                    options.fingerprint_opts = generateFingerprint(this.opts.fingerprint_generator)
                     break;
             }
         }
