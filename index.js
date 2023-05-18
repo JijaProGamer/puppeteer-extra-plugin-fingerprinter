@@ -210,7 +210,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
     }
 
     async onBrowser(browser, opts){
-        let options = opts.fingerprint_opts
+        let options = opts.fingerprint_opts || opts.options.fingerprint_opts
         let evasions = this.availableEvasions
         let fingerprint_generator = this.opts.fingerprint_generator
 
@@ -262,14 +262,13 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
     
                 setTimeout(() => {
                     if (request.isInterceptResolutionHandled()) return;
-                    let proxy = page.options.proxy.trim()
+                    let proxy = (page.options.proxy || "").trim()
     
                     if(!proxy || proxy == "direct" || proxy == "direct://"){
                         request.continue({headers})
                     } else {
                         useProxy(request, {proxy, headers})
-                    }
-    
+                    }    
                 }, 250)
             });
         });
@@ -287,6 +286,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
 
         if (this.opts.staticFingerprint) {
             options.fingerprint_opts = this.opts.staticFingerprint
+            return
         } else {
             if(!this.opts.generator_style){
                 options.fingerprint_opts = generateFingerprint(this.opts.fingerprint_generator)

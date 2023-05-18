@@ -1,11 +1,25 @@
-import { createFingerprinterInterface } from "./index.js";
+import { createFingerprinterInterface, generateFingerprint } from "./index.js";
 import puppeteer from "puppeteer-extra"
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-global.dev = true
+let staticFingerprint = generateFingerprint({
+    webgl_vendor: "NVIDIA Corporation",
+    webgl_renderer: "NVIDIA GeForce GTX 1650/PCIe/SSE2",
+    userAgent: (e) => {return e.includes("Windows NT 10.0")},
+    language: (e) => {return e.includes("en")},
+    viewport: (e) => {return e.width > 1000 && e.height > 800},
+    cpus: (e) => {return e <= 32 && e >= 4},
+    memory: (e) => {return e <= 8},
+    compatibleMediaMimes: (e) => {return e.audio.includes("aac"), e.video["mp4"] && e.video.mp4.length > 0},
+    canvas: {chance: 95, shift: 4}, 
+    proxy: () => "test" // Test is not a valid proxy so it should error
+})
 
-let fingerprintInterface = createFingerprinterInterface({generator_style: "per_page"})
+let fingerprintInterface = createFingerprinterInterface({
+    generator_style: "global",
+    staticFingerprint: staticFingerprint
+})
 
 puppeteer.use(fingerprintInterface)
 
