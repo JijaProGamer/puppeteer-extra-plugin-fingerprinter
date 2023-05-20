@@ -13,7 +13,7 @@ let staticFingerprint = generateFingerprint({
     memory: (e) => {return e <= 8},
     compatibleMediaMimes: (e) => {return e.audio.includes("aac"), e.video["mp4"] && e.video.mp4.length > 0},
     canvas: {chance: 95, shift: 4}, 
-    proxy: () => "test" // Test is not a valid proxy so it should error
+    //proxy: () => "test" // Test is not a valid proxy so it should error
 })
 
 let fingerprintInterface = createFingerprinterInterface({

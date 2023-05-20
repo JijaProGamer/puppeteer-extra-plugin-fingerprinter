@@ -45,12 +45,12 @@ let commonFingerprint = {
 let cpus = [4, 8, 12, 16, 24, 32, 64, 96]
 let memories = [0.25, 0.5, 1, 2, 4, 8]
 let webgl_vendors = ["Google Inc.", "NVIDIA Corporation"]
-let webgl_renderers = JSON.parse(readFileSync("./databases/webgl_renderers.json"))
-let mediaTypes = JSON.parse(readFileSync("./databases/media_types.json"))
-let languages = JSON.parse(readFileSync("./databases/languages.json"))
-let canvases = JSON.parse(readFileSync("./databases/canvases.json"))
-let userAgents = JSON.parse(readFileSync("./databases/userAgents.json"))
-let viewports = JSON.parse(readFileSync("./databases/viewports.json"))
+let webgl_renderers = JSON.parse(readFileSync(path.join(__dirname, "/databases/webgl_renderers.json")))
+let mediaTypes = JSON.parse(readFileSync(path.join(__dirname, "/databases/media_types.json")))
+let languages = JSON.parse(readFileSync(path.join(__dirname, "/databases/languages.json")))
+let canvases = JSON.parse(readFileSync(path.join(__dirname, "/databases/canvases.json")))
+let userAgents = JSON.parse(readFileSync(path.join(__dirname, "/databases/userAgents.json")))
+let viewports = JSON.parse(readFileSync(path.join(__dirname, "/databases/viewports.json")))
 
 function shuffle(arr) {
     return [...arr]
