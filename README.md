@@ -26,6 +26,16 @@ let staticFingerprint = generateFingerprint({
 
 let fingerprinter = createFingerprinterInterface({
     generator_style: "per_browser" || "global" || "per_page", // Optional if staticFingerprint is provided
+    requestInterceptor: async (page, request, noProxy, useProxy, abort) => { // Ability to intercept requests, fixes puppeteer request interception bugs
+        if(await request.url() == "www.example.com/page4" && await page.url() == "www.example.com") 
+            noProxy()
+
+        if(await request.url() == "www.example.com/big_image")
+            abort()
+
+        useProxy()
+    },
+
     fingerprint_generator: {
         webgl_vendor: "NVIDIA Corporation", // You can use values instead of functions too
         webgl_renderer: "NVIDIA GeForce GTX 1650/PCIe/SSE2",

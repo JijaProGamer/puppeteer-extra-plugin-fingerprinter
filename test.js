@@ -18,7 +18,10 @@ let staticFingerprint = generateFingerprint({
 
 let fingerprintInterface = createFingerprinterInterface({
     generator_style: "global",
-    staticFingerprint: staticFingerprint
+    staticFingerprint: staticFingerprint,
+    requestInterceptor: async (page, request, noProxy, useProxy, abort) => {
+        useProxy()
+    }
 })
 
 puppeteer.use(fingerprintInterface)
