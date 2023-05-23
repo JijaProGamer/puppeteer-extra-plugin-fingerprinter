@@ -209,100 +209,94 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
         this.opts.enabledEvasions = evasions
     }
 
-    async onBrowser(browser, opts){
-        let options = opts.fingerprint_opts || opts.options.fingerprint_opts
-        let evasions = this.availableEvasions
-        let fingerprint_generator = this.opts.fingerprint_generator
+    async onPageCreated(page) {
+        let options = page.browser().__fingerprinter_options
+        if(!options) options = generateFingerprint(this.opts.fingerprint_generator)
+        page.options = options
 
-        browser.on('targetcreated',async (target) => {
-            if(target.type() !== "page")
-                return
-            
-            const pageList = await browser.pages()
-            const page = pageList[pageList.length - 1]
+        await page.setRequestInterception(true);
 
-            page.options = options || generateFingerprint(fingerprint_generator)
+        for(let evasion of this.availableEvasions){
+            evasionPlugins[evasion](page, page.options)
+        }
 
-            for(let evasion of evasions){
-                evasionPlugins[evasion](page, page.options)
+        page.on('request', (request) => {
+            if (request.isInterceptResolutionHandled()) return;
+
+            let headers = {...{
+                //"accept": 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'en-US,en;q=0.5',
+                //'upgrade-insecure-requests': '1',
+            },...request.headers()}
+
+            if (request.isNavigationRequest()) {
+                headers["sec-fetch-mode"] = "navigate";
+                headers["sec-fetch-site"] = "none";
+                headers["sec-fetch-user"] = "?1";
+            } else {
+                headers["sec-fetch-mode"] = "no-cors";
+                headers["sec-fetch-site"] = "same-origin";
             }
 
-            await page.setRequestInterception(true);
+            let resourceType = request.resourceType()
 
-            page.on('request', (request) => {
-                if (request.isInterceptResolutionHandled()) return;
-    
-                let headers = {...{
-                    //"accept": 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-                    'accept-encoding': 'gzip, deflate, br',
-                    'accept-language': 'en-US,en;q=0.5',
-                    //'upgrade-insecure-requests': '1',
-                },...request.headers()}
-    
-                if (request.isNavigationRequest()) {
-                    headers["sec-fetch-mode"] = "navigate";
-                    headers["sec-fetch-site"] = "none";
-                    headers["sec-fetch-user"] = "?1";
+            if(!resourceType == "ping"){
+                if(resourceType == "fetch"){
+                    headers["sec-fetch-dest"] = "empty"
                 } else {
-                    headers["sec-fetch-mode"] = "no-cors";
-                    headers["sec-fetch-site"] = "same-origin";
+                    headers["sec-fetch-dest"] = resourceType
                 }
-    
-                let resourceType = request.resourceType()
-    
-                if(!resourceType == "ping"){
-                    if(resourceType == "fetch"){
-                        headers["sec-fetch-dest"] = "empty"
-                    } else {
-                        headers["sec-fetch-dest"] = resourceType
-                    }
+            }
+
+            // Wait for other request handlers to do their jobs, usefull for not wasting bandwidth on rejections and such
+            
+            if(typeof this.opts.requestInterceptor == "function"){
+                let sentResponse = false
+
+                function _abort(){
+                    if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
+                    sentResponse = true
+
+                    request.abort()
                 }
-    
-                // Wait for other request handlers to do their jobs, usefull for not wasting bandwidth on rejections and such
-                
-                if(typeof this.opts.requestInterceptor == "function"){
-                    let sentResponse = false;
 
-                    function _abort(){
-                        if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
-                        sentResponse = true
+                function _continue(){
+                    if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
+                    sentResponse = true
 
-                        request.abort()
-                    }
+                    request.continue({headers})
+                }
 
-                    function _continue(){
-                        if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
-                        sentResponse = true
-
-                        request.continue({headers})
-                    }
-
-                    function _useProxy(){
-                        if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
-                        sentResponse = true
-                        
-                        let proxy = (page.options.proxy || "").trim()
-
-                        if(!proxy || proxy == "direct" || proxy == "direct://"){
-                            request.continue({headers})
-                        } else {
-                            useProxy(request, {proxy, headers})
-                        }                   
-                    }
-
-                    this.opts.requestInterceptor(page, request, _continue, _useProxy, _abort)
-                } else {
-                    if (request.isInterceptResolutionHandled()) return;
+                function _useProxy(){
+                    if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
+                    sentResponse = true
+                    
                     let proxy = (page.options.proxy || "").trim()
-    
+
                     if(!proxy || proxy == "direct" || proxy == "direct://"){
                         request.continue({headers})
                     } else {
                         useProxy(request, {proxy, headers})
-                    }
+                    }                   
                 }
-            });
+
+                this.opts.requestInterceptor(page, request, _continue, _useProxy, _abort)
+            } else {
+                if (request.isInterceptResolutionHandled()) return;
+                let proxy = (page.options.proxy || "").trim()
+
+                if(!proxy || proxy == "direct" || proxy == "direct://"){
+                    request.continue({headers})
+                } else {
+                    useProxy(request, {proxy, headers})
+                }
+            }
         });
+      }
+
+    async onBrowser(browser, opts){
+        browser.__fingerprinter_options = (opts.fingerprint_opts || opts.options.fingerprint_opts);
     }
 
     async beforeLaunch(options) {    

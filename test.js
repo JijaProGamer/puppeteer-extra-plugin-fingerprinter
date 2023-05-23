@@ -5,7 +5,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 let staticFingerprint = generateFingerprint({
     webgl_vendor: "NVIDIA Corporation",
-    webgl_renderer: "NVIDIA GeForce GTX 1650/PCIe/SSE2",
+    webgl_renderer: () => true,
     userAgent: (e) => {return e.includes("Windows NT 10.0")},
     language: (e) => {return e.includes("en")},
     viewport: (e) => {return e.width > 1000 && e.height > 800},
@@ -17,10 +17,12 @@ let staticFingerprint = generateFingerprint({
 })
 
 let fingerprintInterface = createFingerprinterInterface({
-    generator_style: "global",
-    staticFingerprint: staticFingerprint,
+    generator_style: "per_page",
+    //staticFingerprint: staticFingerprint,
     requestInterceptor: (page, request, noProxy, useProxy, abort) => {
-        abort()
+        /*abort()
+        useProxy()*/
+
         useProxy()
     }
 })
