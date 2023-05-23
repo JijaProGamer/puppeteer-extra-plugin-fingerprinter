@@ -19,7 +19,8 @@ let staticFingerprint = generateFingerprint({
 let fingerprintInterface = createFingerprinterInterface({
     generator_style: "global",
     staticFingerprint: staticFingerprint,
-    requestInterceptor: async (page, request, noProxy, useProxy, abort) => {
+    requestInterceptor: (page, request, noProxy, useProxy, abort) => {
+        abort()
         useProxy()
     }
 })
@@ -36,7 +37,7 @@ puppeteer.launch({
     //await page.goto("https://abrahamjuliot.github.io/creepjs/", {waitUntil: "networkidle2"})
     await sleep(3000)
 
-    await page.screenshot({path: "image.png", fullPage: true})
+    //await page.screenshot({path: "image.png", fullPage: true})
 
     console.log("Done")
 })

@@ -259,26 +259,26 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
                 }
     
                 // Wait for other request handlers to do their jobs, usefull for not wasting bandwidth on rejections and such
-    
+                
                 if(typeof this.opts.requestInterceptor == "function"){
                     let sentResponse = false;
 
                     function _abort(){
-                        if(sentResponse) throw new Error("Request is already handled!")
+                        if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
                         sentResponse = true
 
                         request.abort()
                     }
 
                     function _continue(){
-                        if(sentResponse) throw new Error("Request is already handled!")
+                        if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
                         sentResponse = true
 
                         request.continue({headers})
                     }
 
                     function _useProxy(){
-                        if(sentResponse) throw new Error("Request is already handled!")
+                        if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
                         sentResponse = true
                         
                         let proxy = (page.options.proxy || "").trim()
@@ -287,7 +287,8 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
                             request.continue({headers})
                         } else {
                             useProxy(request, {proxy, headers})
-                        }                    }
+                        }                   
+                    }
 
                     this.opts.requestInterceptor(page, request, _continue, _useProxy, _abort)
                 } else {
