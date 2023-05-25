@@ -26,14 +26,14 @@ let staticFingerprint = generateFingerprint({
 
 let fingerprinter = createFingerprinterInterface({
     generator_style: "per_browser" || "global" || "per_page", // Optional if staticFingerprint is provided
-    requestInterceptor: async (page, request, noProxy, useProxy, abort) => { // Ability to intercept requests, fixes puppeteer request interception bugs
+    requestInterceptor: async (page, request) => { // Ability to intercept requests, fixes puppeteer request interception bugs
         if(await request.url() == "www.example.com/page4" && await page.url() == "www.example.com") 
-            noProxy()
+            return "direct"
 
         if(await request.url() == "www.example.com/big_image")
-            abort()
+            return "abort"
 
-        useProxy()
+        return "proxy"
     },
 
     fingerprint_generator: {

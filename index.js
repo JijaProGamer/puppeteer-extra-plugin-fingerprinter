@@ -1,5 +1,5 @@
 //import axios from 'axios';
-import { existsSync, readFileSync } from 'node:fs';
+import { Dirent, existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin';
 import useProxy from 'puppeteer-page-proxy'
@@ -220,7 +220,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
             evasionPlugins[evasion](page, page.options)
         }
 
-        page.on('request', (request) => {
+        page.on('request', async (request) => {
             if (request.isInterceptResolutionHandled()) return;
 
             let headers = {...{
@@ -252,36 +252,23 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
             // Wait for other request handlers to do their jobs, usefull for not wasting bandwidth on rejections and such
             
             if(typeof this.opts.requestInterceptor == "function"){
-                let sentResponse = false
+                let mode = await this.opts.requestInterceptor(page, request)
+                if(request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
 
-                function _abort(){
-                    if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
-                    sentResponse = true
+                if(mode == "proxy" && (page.options.proxy == "direct" || page.options.proxy == "direct://"))
+                        mode = "direct"
 
-                    request.abort()
-                }
-
-                function _continue(){
-                    if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
-                    sentResponse = true
-
-                    request.continue({headers})
-                }
-
-                function _useProxy(){
-                    if(sentResponse || request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
-                    sentResponse = true
-                    
-                    let proxy = (page.options.proxy || "").trim()
-
-                    if(!proxy || proxy == "direct" || proxy == "direct://"){
+                switch(mode){
+                    case "direct":
                         request.continue({headers})
-                    } else {
-                        useProxy(request, {proxy, headers})
-                    }                   
+                        break
+                    case "proxy":
+                        useProxy(request, {proxy: page.options.proxy, headers})
+                        break
+                    case "abort":
+                        request.abort()
+                        break
                 }
-
-                this.opts.requestInterceptor(page, request, _continue, _useProxy, _abort)
             } else {
                 if (request.isInterceptResolutionHandled()) return;
                 let proxy = (page.options.proxy || "").trim()
@@ -299,7 +286,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
         browser.__fingerprinter_options = (opts.fingerprint_opts || opts.options.fingerprint_opts);
     }
 
-    async beforeLaunch(options) {    
+    async beforeLaunch(options) {            
         options.ignoreDefaultArgs = options.ignoreDefaultArgs || []
         if (options.ignoreDefaultArgs !== true) {
             for(let arg of badDefaultArgs){

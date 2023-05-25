@@ -19,17 +19,17 @@ let staticFingerprint = generateFingerprint({
 let fingerprintInterface = createFingerprinterInterface({
     generator_style: "per_page",
     //staticFingerprint: staticFingerprint,
-    requestInterceptor: (page, request, noProxy, useProxy, abort) => {
+    requestInterceptor: (page, request) => {
         /*abort()
         useProxy()*/
 
-        useProxy()
+        return "direct"
     }
 })
 
 puppeteer.use(fingerprintInterface)
 
-puppeteer.launch({
+/*puppeteer.launch({
     headless: false,
     executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
 }).then(async (browser) => {
@@ -42,4 +42,28 @@ puppeteer.launch({
     //await page.screenshot({path: "image.png", fullPage: true})
 
     console.log("Done")
+})*/
+
+puppeteer.launch({
+    headless: false,
+    executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+}).then(async (browser) => {
+    let page = await browser.newPage()
+    await page.goto("https://www.youtube.com/watch?v=EMLwtpuccLM")
+})
+
+puppeteer.launch({
+    headless: false,
+    executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+}).then(async (browser) => {
+    let page = await browser.newPage()
+    await page.goto("https://www.youtube.com/watch?v=EMLwtpuccLM")
+})
+
+puppeteer.launch({
+    headless: false,
+    executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+}).then(async (browser) => {
+    let page = await browser.newPage()
+    await page.goto("https://www.youtube.com/watch?v=EMLwtpuccLM")
 })
