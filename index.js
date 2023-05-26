@@ -1,5 +1,5 @@
 //import axios from 'axios';
-import { Dirent, existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin';
 import useProxy from 'puppeteer-page-proxy'
@@ -8,10 +8,8 @@ import { dirname } from 'path'
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url'
 
-const require = createRequire(fileURLToPath(import.meta.url)); 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
-global.__dirname = __dirname
+global.require = createRequire(fileURLToPath(import.meta.url)); 
+global.__dirname = dirname(fileURLToPath(import.meta.url))
 
 let commonFingerprint = {
     webgl_vendor: "NVIDIA Corporation",
@@ -252,22 +250,26 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
             // Wait for other request handlers to do their jobs, usefull for not wasting bandwidth on rejections and such
             
             if(typeof this.opts.requestInterceptor == "function"){
-                let mode = await this.opts.requestInterceptor(page, request)
-                if(request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
-
-                if(mode == "proxy" && (page.options.proxy == "direct" || page.options.proxy == "direct://"))
-                        mode = "direct"
-
-                switch(mode){
-                    case "direct":
-                        request.continue({headers})
-                        break
-                    case "proxy":
-                        useProxy(request, {proxy: page.options.proxy, headers})
-                        break
-                    case "abort":
-                        request.abort()
-                        break
+                try {
+                    let mode = await this.opts.requestInterceptor(page, request)
+                    if(request.isInterceptResolutionHandled()) throw new Error("Request is already handled!")
+    
+                    if(mode == "proxy" && (page.options.proxy == "direct" || page.options.proxy == "direct://"))
+                            mode = "direct"
+    
+                    switch(mode){
+                        case "direct":
+                            request.continue({headers})
+                            break
+                        case "proxy":
+                            useProxy(request, {proxy: page.options.proxy, headers})
+                            break
+                        case "abort":
+                            request.abort()
+                            break
+                    }
+                } catch(err) {
+                    console.error(err)
                 }
             } else {
                 if (request.isInterceptResolutionHandled()) return;
