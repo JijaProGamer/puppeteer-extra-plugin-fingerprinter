@@ -1,0 +1,56 @@
+{
+    "Google Inc.": [
+        "ANGLE (Intel(R) HD Graphics 520 Direct3D11 vs_5_0 ps_5_0)",
+        "ANGLE (Intel(R) HD Graphics 530 Direct3D11 vs_5_0 ps_5_0)",
+        "ANGLE (Intel(R) HD Graphics 510 Direct3D11 vs_5_0 ps_5_0)",
+
+        "ANGLE (Intel(R) UHD Graphics 630 Direct3D11 vs_5_0 ps_5_0)",
+        "ANGLE (Intel(R) UHD Graphics 640 Direct3D11 vs_5_0 ps_5_0)",
+
+        "ANGLE (Intel(R) UHD Graphics 740 Direct3D11 vs_5_0 ps_5_0)",
+        "ANGLE (Intel(R) UHD Graphics 750 Direct3D11 vs_5_0 ps_5_0)"
+    ],
+    "NVIDIA Corporation": [
+        "NVIDIA GeForce RTX 3080/PCIe/SSE2",
+        "NVIDIA GeForce RTX 3070/PCIe/SSE2",
+        "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+
+        "NVIDIA GeForce RTX 4090/PCIe/SSE2",
+        "NVIDIA GeForce RTX 3080/PCIe/SSE2",
+        "NVIDIA GeForce RTX 3070/PCIe/SSE2",
+        "NVIDIA GeForce RTX 3060/PCIe/SSE2",
+
+        "NVIDIA GeForce RTX 2080/PCIe/SSE2",
+        "NVIDIA GeForce RTX 2070/PCIe/SSE2",
+        "NVIDIA GeForce RTX 2060/PCIe/SSE2",
+        "NVIDIA GeForce RTX 2050/PCIe/SSE2",
+
+        "NVIDIA GeForce GTX 1660/PCIe/SSE2",
+        "NVIDIA GeForce GTX 1650/PCIe/SSE2",
+
+        "NVIDIA GeForce GTX 1080/PCIe/SSE2",
+        "NVIDIA GeForce GTX 1070/PCIe/SSE2",
+        "NVIDIA GeForce GTX 1060/PCIe/SSE2",
+        "NVIDIA GeForce GTX 1050/PCIe/SSE2",
+
+        "NVIDIA GeForce GTX 950/PCIe/SSE2",
+        "NVIDIA GeForce GTX 960/PCIe/SSE2",
+        "NVIDIA GeForce GTX 970/PCIe/SSE2",
+        "NVIDIA GeForce GTX 980/PCIe/SSE2",
+
+        "NVIDIA GeForce GTX 750/PCIe/SSE2",
+        "NVIDIA GeForce GTX 760/PCIe/SSE2",
+        "NVIDIA GeForce GTX 770/PCIe/SSE2",
+        "NVIDIA GeForce GTX 780/PCIe/SSE2",
+
+        "NVIDIA GeForce GTX 680/PCIe/SSE2",
+        "NVIDIA GeForce GTX 670/PCIe/SSE2",
+        "NVIDIA GeForce GTX 660/PCIe/SSE2",
+        "NVIDIA GeForce GTX 650/PCIe/SSE2",
+
+        "NVIDIA GeForce GTX 580/PCIe/SSE2",
+        "NVIDIA GeForce GTX 570/PCIe/SSE2",
+        "NVIDIA GeForce GTX 560/PCIe/SSE2",
+        "NVIDIA GeForce GTX 550/PCIe/SSE2"
+    ]
+}

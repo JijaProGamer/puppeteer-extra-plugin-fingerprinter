@@ -1,0 +1,9 @@
+[
+    { "shift": 1, "chance": 50 },
+    { "shift": 2, "chance": 25 },
+    { "shift": 4, "chance": 75 },
+    { "shift": 2, "chance": 100 },
+    { "shift": 3, "chance": 35 },
+    { "shift": 4, "chance": 45 },
+    { "shift": 5, "chance": 95 }
+]

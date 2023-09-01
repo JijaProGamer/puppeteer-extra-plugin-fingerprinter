@@ -1,0 +1,34 @@
+[
+    {
+        "audio": ["flac", "vorbis", "opus", "aac"],
+        "video": {
+            "mp4": ["avc1.42E01E", "H264", "flac"],
+            "mpeg": [],
+            "ogg": ["opus", "theora"],
+            "webm": ["vp9", "vp8"]
+        }
+    },
+    {
+        "audio": ["flac", "opus"],
+        "video": {
+            "mp4": ["avc1.42E01E", "H264", "flac"],
+            "webm": ["vp8"]
+        }
+    },
+    {
+        "audio": ["vorbis", "opus", "aac"],
+        "video": {
+            "mp4": ["avc1.42E01E", "H264", "flac"],
+            "mpeg": [],
+            "ogg": ["opus"]
+        }
+    },
+    {
+        "audio": ["flac", "vorbis", "aac"],
+        "video": {
+            "mp4": ["avc1.42E01E", "H264", "flac"],
+            "ogg": ["opus", "theora"],
+            "webm": ["vp8"]
+        }
+    }
+]
