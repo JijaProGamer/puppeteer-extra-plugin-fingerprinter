@@ -57,5 +57,5 @@ export class FingerprinterPlugin {
 }
 
 export function generateFingerprint(options: fingerprintGeneratorOptions | null): FingerprinterPlugin
-export function createFingerprinterInterface(options: fingerprintGeneratorOptions): FingerprinterPlugin
+export function createFingerprinterInterface(options: FingerprintInterface): FingerprinterPlugin
 export declare const commonFingerprint: Fingerprint
