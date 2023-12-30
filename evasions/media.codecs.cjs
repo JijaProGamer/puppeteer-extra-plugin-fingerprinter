@@ -38,13 +38,13 @@ class Plugin {
       
                 switch (type) {
                   case "audio":
-                    if (opts.compatibleMediaMimes.audio.includes(container)) {
+                    if (options.compatibleMediaMimes.audio.includes(container)) {
                       return "probably"
                     }
       
                     return ""
                   case "video":
-                    let videoContainer = opts.compatibleMediaMimes.video[container]
+                    let videoContainer = options.compatibleMediaMimes.video[container]
                     if (videoContainer) {
                       let codecFound = codecs.some(codec => videoContainer.includes(codec))
                       if (codecFound || codecs.length == 0) {
