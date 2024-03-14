@@ -19,7 +19,8 @@ let staticFingerprint = generateFingerprint({
     canvas: {chance: 95, shift: 4}, // set shift to 0 to cancel canvas spoofing
     proxy: "direct", // Support for string only
     proxy: () => "direct", // Defaults to this, meaning no proxy
-    proxy: () =>  ["direct", "socks5://127.0.0.1"] // Support for array and get a random object
+    proxy: () =>  ["direct", "socks5://127.0.0.1"], // Support for array and get a random object
+    requestInterceptPriorty: 0 // Support for puppeteers cooperative-intercept-mode
 })
 
 // You can save staticFingerprint for later use if you want
@@ -50,6 +51,7 @@ let fingerprinter = createFingerprinterInterface({
         proxy: "direct", // Support for string only
         proxy: () => "direct", // Defaults to this, meaning no proxy
         proxy: () =>  ["direct", "socks5://127.0.0.1"] // Support for array and get a random object
+        requestInterceptPriorty: 0 // Support for puppeteers cooperative-intercept-mode
     },
 
     staticFingerprint: staticFingerprint// Will only use this fingerprint for all pages and browsers if provided,

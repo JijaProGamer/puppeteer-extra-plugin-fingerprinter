@@ -39,7 +39,8 @@ interface fingerprintGeneratorOptions {
     memory: number | boolReturn | null,
     compatibleMediaMimes: {audio: string[], video: anyString,} | boolReturn | null,
     canvas: {chance: number, shift: number} | boolReturn | null,
-    proxy: string | stringReturn | stringArrayReturn | null
+    proxy: string | stringReturn | stringArrayReturn | null,
+    requestInterceptPriorty: number | null
 }
 
 interface FingerprintInterface {
