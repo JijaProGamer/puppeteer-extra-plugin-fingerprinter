@@ -213,6 +213,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
         page.options = options
 
         await page.setRequestInterception(true);
+        const INTERCEPT_PRIORITY = this.opts.fingerprint_generator.requestInterceptPriorty || 0
 
         for(let evasion of this.availableEvasions){
             evasionPlugins[evasion](page, page.options)
@@ -259,13 +260,13 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
     
                     switch(mode){
                         case "direct":
-                            request.continue({headers})
+                            request.continue({headers}, INTERCEPT_PRIORITY)
                             break
                         case "proxy":
                             useProxy(request, {proxy: page.options.proxy, headers})
                             break
                         case "abort":
-                            request.abort()
+                            request.abort('aborted', INTERCEPT_PRIORITY)
                             break
                     }
                 } catch(err) {
@@ -276,7 +277,7 @@ class FingerprinterPlugin extends PuppeteerExtraPlugin {
                 let proxy = (page.options.proxy || "").trim()
 
                 if(!proxy || proxy == "direct" || proxy == "direct://"){
-                    request.continue({headers})
+                    request.continue({headers}, INTERCEPT_PRIORITY)
                 } else {
                     useProxy(request, {proxy, headers})
                 }
