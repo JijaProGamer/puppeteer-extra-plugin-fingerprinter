@@ -1,0 +1,27 @@
+{
+  "mimeTypes": [
+    {
+      "type": "application/pdf",
+      "suffixes": "pdf",
+      "description": "Portable Document Format",
+      "__pluginName": "PDF Viewer"
+    },
+    {
+      "type": "text/pdf",
+      "suffixes": "pdf",
+      "description": "Portable Document Format",
+      "__pluginName": "PDF Viewer"
+    }
+  ],
+  "plugins": [
+    {
+      "name": "PDF Viewer",
+      "filename": "internal-pdf-viewer",
+      "description": "Portable Document Format",
+      "__mimeTypes": [
+        "application/pdf",
+        "text/pdf"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{"evasions": [
+    "navigator",
+    "network-navigator",
+
+    "window",
+    "webgl",
+    "media",
+    "canvas",
+    "focus"
+], "plugins": [
+    "disable_webrtc"
+]}

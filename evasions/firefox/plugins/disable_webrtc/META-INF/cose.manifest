@@ -1,0 +1,87 @@
+Manifest-Version: 1.0
+
+Name: LICENSE
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: 7OPfEmPBAPk8Qn+s5TWiknI9OOc=
+SHA256-Digest: rxdbnZbuk8IaA2FS4bkFsLlTBNSujCySHHYJEAuo334=
+
+Name: gulpfile.js
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: nAt4xlW/8eIj/PcC7zvzcfqLZ5E=
+SHA256-Digest: fpf66LAg0k4/V6SCC3XCQ1l9bU1KUmZC/LA28LCWeG4=
+
+Name: README.md
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: HZhw6UEkTDh/kNcmY9Xbh6AQQdU=
+SHA256-Digest: CrHPSut9mWc3TBYjdy/h7s+MoUtFAiL164E3Z8otaDU=
+
+Name: COPYING
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: 7OPfEmPBAPk8Qn+s5TWiknI9OOc=
+SHA256-Digest: rxdbnZbuk8IaA2FS4bkFsLlTBNSujCySHHYJEAuo334=
+
+Name: manifest.json
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: 0/pOLEp/B2bbL2Yxe2rqqTYFLjE=
+SHA256-Digest: J7rjMEVUb1jCT3F19iWpxAS7w/N8uir+ut4wLwCGz6Q=
+
+Name: package.json
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: kODNI00QAHp+FzCj8wP6jDcMWFY=
+SHA256-Digest: 9QTeRkBmfnOSoklUB1CjcXWLQ6Qyy/5Iv4G+RxprM3U=
+
+Name: images/safe-32.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: VLP77/q2IKOuGA5A9diJJQKbVlk=
+SHA256-Digest: dxR+pHMw7w95QpOhMuSJCRu+7KmC5CKWIboE/85nn5Q=
+
+Name: images/safe-16.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: ZQmYoxURsrJDoVOJG75mtfVl/PA=
+SHA256-Digest: /tU4biEK6J6Xjt1wbDthD6gSKCmFZUQU67NvSTuGeag=
+
+Name: images/safe-48.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: tpz5SlYeNSVk6A2QHot9XYhIO6s=
+SHA256-Digest: 75zDvCJDLZ3J1zWeNYs0iNGSbJhIyDM/F5k2QJOr0Yg=
+
+Name: images/safe-64.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: IR6b5rXEpIbayEKDv4qE2oKcD7Q=
+SHA256-Digest: gHTDvekPxwPFRb+XCvkHuF0c2IC4rJUJW8K8uFr7UvI=
+
+Name: images/safe.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: vgMRVxq0TrzKuGN7Iqm/jAgBFWs=
+SHA256-Digest: gd0rkf0V5T3XQPwF9RkRf9ecH/ag+ZFxY9qTiOXA4PY=
+
+Name: images/unsafe-32.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: Rux1ToNmKztmX7zcg87IZ8gaxP0=
+SHA256-Digest: 02YFaAXGifbirBlTQ9Q0O3grIVqbZI7SXAJJwpQVTRM=
+
+Name: images/unsafe-16.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: tdnQucpDP6omr1EhoFkOlBZxkOs=
+SHA256-Digest: Ohpo+jBLsaAvmOwuPV7GP6Pdl8pg13KHt7etfvW7vbw=
+
+Name: images/unsafe-48.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: 1ASqvpA1CWYk3coSrFqeNAVowZU=
+SHA256-Digest: tNxRBzZIMfVqXgwgKhN191QQsXh+KZojzekrP2Ioxnw=
+
+Name: images/unsafe-64.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: 72mGGs/7EuLe3Umu3M0FNnYSlwk=
+SHA256-Digest: CNEYwHKjEQwfBieNXqKbDTwLP0FvH2Is2O+Pa/bm5FM=
+
+Name: images/unsafe.png
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: HEae1TUtG9CCWtRF3QEovbDewHU=
+SHA256-Digest: MvEbs+A93HjfNDihJGFXGw9D0oXQrf+4EwKL6RGWJz8=
+
+Name: js/disable_webrtc.js
+Digest-Algorithms: SHA1 SHA256
+SHA1-Digest: LHbetxlKcOqzoDTYapNaB4HDsjs=
+SHA256-Digest: J5b3Yx5+Qe12dVS3ZKYZYhRD+ZCpMrMOXJ4Q713552I=
+

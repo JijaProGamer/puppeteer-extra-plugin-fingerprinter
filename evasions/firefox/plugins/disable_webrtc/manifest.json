@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+  "name": "Disable WebRTC",
+  "version": "1.0.23",
+
+  "description": "Disables WebRTC consistently.",
+
+  "commands": {
+      "_execute_browser_action": {
+          "suggested_key": {
+              "default": "Ctrl+Alt+W"
+          }
+      }
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "images/safe-16.png",
+      "32": "images/safe-32.png",
+      "48": "images/safe-48.png",
+      "64": "images/safe-64.png"
+    },
+    "default_title": "Disable WebRTC"
+  },
+
+  "icons": {
+    "16": "images/safe-16.png",
+    "32": "images/safe-32.png",
+    "48": "images/safe-48.png",
+    "64": "images/safe-64.png"
+  },
+
+  "background": {
+    "scripts": ["js/disable_webrtc.js"]
+  },
+
+  "permissions": ["privacy", "browserSettings"]
+
+}

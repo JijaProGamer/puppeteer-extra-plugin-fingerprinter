@@ -1,0 +1,15 @@
+{
+    "title": "Disable WebRTC",
+    "description": "Disables WebRTC consistently.",
+    "author": "Chris Antaki",
+    "license": "MPL 2.0",
+    "version": "1.0.23",
+    "scripts": {
+        "start": "web-ext build --overwrite-dest"
+    },
+    "dependencies": {
+        "gulp": "^3.8.11",
+        "gulp-image-resize": "^0.6.0",
+        "gulp-rename": "^1.2.2"
+    }
+}
