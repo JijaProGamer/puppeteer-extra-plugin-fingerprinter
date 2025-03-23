@@ -1,6 +1,6 @@
 {
   "name": "playwright-anti-fingerprinter",
-  "version": "1.1.9",
+  "version": "1.2.1",
   "type": "module",
   "description": "puppeteer extra plugin to randomise your browser fingerprint",
   "main": "index.js",
@@ -33,7 +33,7 @@
     "http-proxy-agent": "^7.0.0",
     "https-proxy-agent": "^7.0.2",
     "lru-cache": "^10.0.1",
-    "playwright": "^1.41.2",
+    "playwright": "^1.51.1",
     "playwright-cache": "^1.0.1",
     "socks-proxy-agent": "^8.0.2",
     "tough-cookie": "^4.1.3",
